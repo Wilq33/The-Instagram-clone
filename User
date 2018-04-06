@@ -28,3 +28,11 @@ mysql> DESC users;
 | created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
 +------------+--------------+------+-----+-------------------+----------------+
 3 rows in set (0.00 sec)
+
+mysql> INSERT INTO users (username)
+    -> VALUES 
+    -> ('BlueTheCat'),
+    -> ('CharlieBrown'),
+    -> ('ColtSteele');
+Query OK, 3 rows affected (0.00 sec)
+Records: 3  Duplicates: 0  Warnings: 0
