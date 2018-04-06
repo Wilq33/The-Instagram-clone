@@ -99,3 +99,23 @@ mysql> DESC likes;
 | created_at | timestamp | NO   |     | CURRENT_TIMESTAMP |       |
 +------------+-----------+------+-----+-------------------+-------+
 3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE follows(
+    -> follower_id INT NOT NULL,
+    -> followee_id INT NOT NULL,
+    -> created_at TIMESTAMP DEFAULT NOW(),
+    -> FOREIGN KEY (follower_id) REFERENCES users(id),
+    -> FOREIGN KEY (followee_id) REFERENCES users(id),
+    -> PRIMARY KEY (follower_id, followee_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DESC follows;
++-------------+-----------+------+-----+-------------------+-------+
+| Field       | Type      | Null | Key | Default           | Extra |
++-------------+-----------+------+-----+-------------------+-------+
+| follower_id | int(11)   | NO   | PRI | NULL              |       |
+| followee_id | int(11)   | NO   | PRI | NULL              |       |
+| created_at  | timestamp | NO   |     | CURRENT_TIMESTAMP |       |
++-------------+-----------+------+-----+-------------------+-------+
+3 rows in set (0.00 sec)
