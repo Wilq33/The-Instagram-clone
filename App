@@ -36,3 +36,23 @@ mysql> INSERT INTO users (username)
     -> ('ColtSteele');
 Query OK, 3 rows affected (0.00 sec)
 Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> CREATE TABLE photos(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> image_url VARCHAR(255) NOT NULL ,
+    -> user_id INT NOT NULL,
+    -> created_at TIMESTAMP DEFAULT NOW(),
+    -> FOREIGN KEY(user_id) REFERENCES users(id)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> DESC photos;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| image_url  | varchar(255) | NO   |     | NULL              |                |
+| user_id    | int(11)      | NO   | MUL | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+4 rows in set (0.00 sec)
