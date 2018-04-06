@@ -119,3 +119,38 @@ mysql> DESC follows;
 | created_at  | timestamp | NO   |     | CURRENT_TIMESTAMP |       |
 +-------------+-----------+------+-----+-------------------+-------+
 3 rows in set (0.00 sec)
+
+mysql> CREATE TABLE tags(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> tag_name VARCHAR(255) UNIQUE,
+    -> created_at TIMESTAMP DEFAULT NOW()
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> CREATE TABLE photo_tags(
+    -> photo_id INT NOT NULL,
+    -> tag_id INT NOT NULL,
+    -> FOREIGN KEY (photo_id) REFERENCES photos(id),
+    -> FOREIGN KEY (tag_id) REFERENCES tags(id),
+    -> PRIMARY KEY (photo_id, tag_id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DESC tags;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| tag_name   | varchar(255) | YES  | UNI | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> DESC photo_tags;
++----------+---------+------+-----+---------+-------+
+| Field    | Type    | Null | Key | Default | Extra |
++----------+---------+------+-----+---------+-------+
+| photo_id | int(11) | NO   | PRI | NULL    |       |
+| tag_id   | int(11) | NO   | PRI | NULL    |       |
++----------+---------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
