@@ -1,0 +1,30 @@
+mysql> Select database();
++---------------+
+| database()    |
++---------------+
+| tv_review_app |
++---------------+
+1 row in set (0.00 sec)
+
+mysql> CREATE DATABASE ig_clone;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE ig_clone;
+Database changed
+
+mysql> CREATE TABLE users (
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> username VARCHAR(255) UNIQUE NOT NULL,
+    -> created_at TIMESTAMP DEFAULT NOW()
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DESC users;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| username   | varchar(255) | NO   | UNI | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+3 rows in set (0.00 sec)
