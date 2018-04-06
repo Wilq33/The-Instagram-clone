@@ -56,3 +56,27 @@ mysql> DESC photos;
 | created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
 +------------+--------------+------+-----+-------------------+----------------+
 4 rows in set (0.00 sec)
+
+mysql> CREATE TABLE comments(
+    -> id INT AUTO_INCREMENT PRIMARY KEY,
+    -> comment_text VARCHAR(255) NOT NULL,
+    -> user_id INT NOT NULL,
+    -> photo_id INT NOT NULL,
+    -> created_at TIMESTAMP DEFAULT NOW(),
+    -> FOREIGN KEY (user_id) REFERENCES users(id),
+    -> FOREIGN KEY (photo_id) REFERENCES photos(id)
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> DESC comments;
++--------------+--------------+------+-----+-------------------+----------------+
+| Field        | Type         | Null | Key | Default           | Extra          |
++--------------+--------------+------+-----+-------------------+----------------+
+| id           | int(11)      | NO   | PRI | NULL              | auto_increment |
+| comment_text | varchar(255) | NO   |     | NULL              |                |
+| user_id      | int(11)      | NO   | MUL | NULL              |                |
+| photo_id     | int(11)      | NO   | MUL | NULL              |                |
+| created_at   | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++--------------+--------------+------+-----+-------------------+----------------+
+5 rows in set (0.00 sec)
+
