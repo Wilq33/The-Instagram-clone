@@ -1060,5 +1060,33 @@ mysql> SELECT
 +-----+-----------------+------------------------+-------+
 5 rows in set (0.00 sec)
 
+-- Answer: Zack_Kemmer93 created that photo
 
+-- Challenge 5 How many times does the average user post ?
+
+mysql> SELECT Count(*) FROM photos;
++----------+
+| Count(*) |
++----------+
+|      257 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT Count(*) FROM users;
++----------+
+| Count(*) |
++----------+
+|      100 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT (SELECT Count(*) FROM photos) / (SELECT Count(*) FROM users) AS AVERAGE;
++---------+
+| AVERAGE |
++---------+
+|  2.5700 |
++---------+
+1 row in set (0.00 sec)
+
+-- Answer: 2.57 photo per user.
 
