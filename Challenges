@@ -285,3 +285,734 @@ mysql> SELECT COUNT(*) as total ,DAYNAME(created_at) AS day FROM users GROUP BY 
 7 rows in set (0.00 sec)
 
 -- Answer: Thursday and Sunday
+
+--Challenge 3 Find the users who have never posted a photo.
+
+mysql> show tables;
++--------------------+
+| Tables_in_ig_clone |
++--------------------+
+| comments           |
+| follows            |
+| likes              |
+| photo_tags         |
+| photos             |
+| tags               |
+| users              |
++--------------------+
+7 rows in set (0.02 sec)
+
+mysql> desc photos;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| image_url  | varchar(255) | NO   |     | NULL              |                |
+| user_id    | int(11)      | NO   | MUL | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> desc users;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| username   | varchar(255) | NO   | UNI | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM users
+    -> LEFT JOIN photos
+    -> ON users.id = photos.user_id;
++-----+-----------------------+---------------------+------+------------------------+---------+---------------------+
+| id  | username              | created_at          | id   | image_url              | user_id | created_at          |
++-----+-----------------------+---------------------+------+------------------------+---------+---------------------+
+|   1 | Kenton_Kirlin         | 2017-02-16 18:22:10 |    1 | http://elijah.biz      |       1 | 2018-04-09 11:42:44 |
+|   1 | Kenton_Kirlin         | 2017-02-16 18:22:10 |    2 | https://shanon.org     |       1 | 2018-04-09 11:42:44 |
+|   1 | Kenton_Kirlin         | 2017-02-16 18:22:10 |    3 | http://vicky.biz       |       1 | 2018-04-09 11:42:44 |
+|   1 | Kenton_Kirlin         | 2017-02-16 18:22:10 |    4 | http://oleta.net       |       1 | 2018-04-09 11:42:44 |
+|   1 | Kenton_Kirlin         | 2017-02-16 18:22:10 |    5 | https://jennings.biz   |       1 | 2018-04-09 11:42:44 |
+|   2 | Andre_Purdy85         | 2017-04-02 17:11:21 |    6 | https://quinn.biz      |       2 | 2018-04-09 11:42:44 |
+|   2 | Andre_Purdy85         | 2017-04-02 17:11:21 |    7 | https://selina.name    |       2 | 2018-04-09 11:42:44 |
+|   2 | Andre_Purdy85         | 2017-04-02 17:11:21 |    8 | http://malvina.org     |       2 | 2018-04-09 11:42:44 |
+|   2 | Andre_Purdy85         | 2017-04-02 17:11:21 |    9 | https://branson.biz    |       2 | 2018-04-09 11:42:44 |
+|   3 | Harley_Lind18         | 2017-02-21 11:12:32 |   10 | https://elenor.name    |       3 | 2018-04-09 11:42:44 |
+|   3 | Harley_Lind18         | 2017-02-21 11:12:32 |   11 | https://marcelino.com  |       3 | 2018-04-09 11:42:44 |
+|   3 | Harley_Lind18         | 2017-02-21 11:12:32 |   12 | http://felicity.name   |       3 | 2018-04-09 11:42:44 |
+|   3 | Harley_Lind18         | 2017-02-21 11:12:32 |   13 | https://fred.com       |       3 | 2018-04-09 11:42:44 |
+|   4 | Arely_Bogan63         | 2016-08-13 01:28:43 |   14 | https://gerhard.biz    |       4 | 2018-04-09 11:42:44 |
+|   4 | Arely_Bogan63         | 2016-08-13 01:28:43 |   15 | https://sherwood.net   |       4 | 2018-04-09 11:42:44 |
+|   4 | Arely_Bogan63         | 2016-08-13 01:28:43 |   16 | https://maudie.org     |       4 | 2018-04-09 11:42:44 |
+|   5 | Aniya_Hackett         | 2016-12-07 01:04:39 | NULL | NULL                   |    NULL | NULL                |
+|   6 | Travon.Waters         | 2017-04-30 13:26:14 |   17 | http://annamae.name    |       6 | 2018-04-09 11:42:44 |
+|   6 | Travon.Waters         | 2017-04-30 13:26:14 |   18 | https://mac.org        |       6 | 2018-04-09 11:42:44 |
+|   6 | Travon.Waters         | 2017-04-30 13:26:14 |   19 | http://miracle.info    |       6 | 2018-04-09 11:42:44 |
+|   6 | Travon.Waters         | 2017-04-30 13:26:14 |   20 | http://emmet.com       |       6 | 2018-04-09 11:42:44 |
+|   6 | Travon.Waters         | 2017-04-30 13:26:14 |   21 | https://lisa.com       |       6 | 2018-04-09 11:42:44 |
+|   7 | Kasandra_Homenick     | 2016-12-12 06:50:07 | NULL | NULL                   |    NULL | NULL                |
+|   8 | Tabitha_Schamberger11 | 2016-08-20 02:19:45 |   22 | https://brooklyn.name  |       8 | 2018-04-09 11:42:44 |
+|   8 | Tabitha_Schamberger11 | 2016-08-20 02:19:45 |   23 | http://madison.net     |       8 | 2018-04-09 11:42:44 |
+|   8 | Tabitha_Schamberger11 | 2016-08-20 02:19:45 |   24 | http://annie.name      |       8 | 2018-04-09 11:42:44 |
+|   8 | Tabitha_Schamberger11 | 2016-08-20 02:19:45 |   25 | http://darron.info     |       8 | 2018-04-09 11:42:44 |
+|   9 | Gus93                 | 2016-06-24 19:36:30 |   26 | http://saige.com       |       9 | 2018-04-09 11:42:44 |
+|   9 | Gus93                 | 2016-06-24 19:36:30 |   27 | https://reece.net      |       9 | 2018-04-09 11:42:44 |
+|   9 | Gus93                 | 2016-06-24 19:36:30 |   28 | http://vance.org       |       9 | 2018-04-09 11:42:44 |
+|   9 | Gus93                 | 2016-06-24 19:36:30 |   29 | http://ignacio.net     |       9 | 2018-04-09 11:42:44 |
+|  10 | Presley_McClure       | 2016-08-07 16:25:48 |   30 | http://kenny.com       |      10 | 2018-04-09 11:42:44 |
+|  10 | Presley_McClure       | 2016-08-07 16:25:48 |   31 | http://remington.name  |      10 | 2018-04-09 11:42:44 |
+|  10 | Presley_McClure       | 2016-08-07 16:25:48 |   32 | http://kurtis.info     |      10 | 2018-04-09 11:42:44 |
+|  11 | Justina.Gaylord27     | 2017-05-04 16:32:15 |   33 | https://alisha.com     |      11 | 2018-04-09 11:42:44 |
+|  11 | Justina.Gaylord27     | 2017-05-04 16:32:15 |   34 | https://henderson.com  |      11 | 2018-04-09 11:42:44 |
+|  11 | Justina.Gaylord27     | 2017-05-04 16:32:15 |   35 | http://bonnie.info     |      11 | 2018-04-09 11:42:44 |
+|  11 | Justina.Gaylord27     | 2017-05-04 16:32:15 |   36 | http://kennith.net     |      11 | 2018-04-09 11:42:44 |
+|  11 | Justina.Gaylord27     | 2017-05-04 16:32:15 |   37 | http://camille.name    |      11 | 2018-04-09 11:42:44 |
+|  12 | Dereck65              | 2017-01-19 01:34:14 |   38 | http://alena.net       |      12 | 2018-04-09 11:42:44 |
+|  12 | Dereck65              | 2017-01-19 01:34:14 |   39 | http://ralph.name      |      12 | 2018-04-09 11:42:44 |
+|  12 | Dereck65              | 2017-01-19 01:34:14 |   40 | https://tyshawn.com    |      12 | 2018-04-09 11:42:44 |
+|  12 | Dereck65              | 2017-01-19 01:34:14 |   41 | https://adella.net     |      12 | 2018-04-09 11:42:44 |
+|  13 | Alexandro35           | 2017-03-29 17:09:02 |   42 | https://cielo.info     |      13 | 2018-04-09 11:42:44 |
+|  13 | Alexandro35           | 2017-03-29 17:09:02 |   43 | https://easter.net     |      13 | 2018-04-09 11:42:44 |
+|  13 | Alexandro35           | 2017-03-29 17:09:02 |   44 | http://golden.org      |      13 | 2018-04-09 11:42:44 |
+|  13 | Alexandro35           | 2017-03-29 17:09:02 |   45 | http://kendall.biz     |      13 | 2018-04-09 11:42:44 |
+|  13 | Alexandro35           | 2017-03-29 17:09:02 |   46 | https://glenda.info    |      13 | 2018-04-09 11:42:44 |
+|  14 | Jaclyn81              | 2017-02-06 23:29:16 | NULL | NULL                   |    NULL | NULL                |
+|  15 | Billy52               | 2016-10-05 14:10:20 |   47 | http://dominic.biz     |      15 | 2018-04-09 11:42:44 |
+|  15 | Billy52               | 2016-10-05 14:10:20 |   48 | http://tressie.info    |      15 | 2018-04-09 11:42:44 |
+|  15 | Billy52               | 2016-10-05 14:10:20 |   49 | http://estevan.org     |      15 | 2018-04-09 11:42:44 |
+|  15 | Billy52               | 2016-10-05 14:10:20 |   50 | http://zena.com        |      15 | 2018-04-09 11:42:44 |
+|  16 | Annalise.McKenzie16   | 2016-08-02 21:32:45 |   51 | https://abagail.com    |      16 | 2018-04-09 11:42:44 |
+|  16 | Annalise.McKenzie16   | 2016-08-02 21:32:45 |   52 | https://hershel.com    |      16 | 2018-04-09 11:42:44 |
+|  16 | Annalise.McKenzie16   | 2016-08-02 21:32:45 |   53 | http://collin.com      |      16 | 2018-04-09 11:42:44 |
+|  16 | Annalise.McKenzie16   | 2016-08-02 21:32:45 |   54 | https://clair.com      |      16 | 2018-04-09 11:42:44 |
+|  17 | Norbert_Carroll35     | 2017-02-06 22:05:43 |   55 | https://deondre.com    |      17 | 2018-04-09 11:42:44 |
+|  17 | Norbert_Carroll35     | 2017-02-06 22:05:43 |   56 | http://tristin.name    |      17 | 2018-04-09 11:42:44 |
+|  17 | Norbert_Carroll35     | 2017-02-06 22:05:43 |   57 | http://kirk.org        |      17 | 2018-04-09 11:42:44 |
+|  18 | Odessa2               | 2016-10-21 18:16:56 |   58 | https://modesta.info   |      18 | 2018-04-09 11:42:44 |
+|  19 | Hailee26              | 2017-04-29 18:53:39 |   59 | http://rylan.biz       |      19 | 2018-04-09 11:42:44 |
+|  19 | Hailee26              | 2017-04-29 18:53:39 |   60 | https://noemie.com     |      19 | 2018-04-09 11:42:44 |
+|  20 | Delpha.Kihn           | 2016-08-31 02:42:30 |   61 | https://dejon.name     |      20 | 2018-04-09 11:42:44 |
+|  21 | Rocio33               | 2017-01-23 11:51:15 | NULL | NULL                   |    NULL | NULL                |
+|  22 | Kenneth64             | 2016-12-27 09:48:17 |   62 | https://rigoberto.net  |      22 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   63 | http://megane.biz      |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   64 | http://emmalee.org     |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   65 | http://nathan.net      |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   66 | http://lionel.net      |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   67 | http://danyka.net      |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   68 | https://woodrow.com    |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   69 | http://harvey.info     |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   70 | http://aiden.org       |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   71 | https://tito.name      |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   72 | https://julian.net     |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   73 | https://mafalda.org    |      23 | 2018-04-09 11:42:44 |
+|  23 | Eveline95             | 2017-01-23 23:14:18 |   74 | http://verner.org      |      23 | 2018-04-09 11:42:44 |
+|  24 | Maxwell.Halvorson     | 2017-04-18 02:32:43 | NULL | NULL                   |    NULL | NULL                |
+|  25 | Tierra.Trantow        | 2016-10-03 12:49:20 | NULL | NULL                   |    NULL | NULL                |
+|  26 | Josianne.Friesen      | 2016-06-07 12:47:00 |   75 | https://elmore.org     |      26 | 2018-04-09 11:42:44 |
+|  26 | Josianne.Friesen      | 2016-06-07 12:47:00 |   76 | http://kasandra.com    |      26 | 2018-04-09 11:42:44 |
+|  26 | Josianne.Friesen      | 2016-06-07 12:47:00 |   77 | https://jarret.info    |      26 | 2018-04-09 11:42:44 |
+|  26 | Josianne.Friesen      | 2016-06-07 12:47:00 |   78 | http://einar.net       |      26 | 2018-04-09 11:42:44 |
+|  26 | Josianne.Friesen      | 2016-06-07 12:47:00 |   79 | http://terry.info      |      26 | 2018-04-09 11:42:44 |
+|  27 | Darwin29              | 2017-03-18 03:10:07 |   80 | https://holden.com     |      27 | 2018-04-09 11:42:44 |
+|  28 | Dario77               | 2016-08-18 07:15:02 |   81 | https://jacinto.org    |      28 | 2018-04-09 11:42:44 |
+|  28 | Dario77               | 2016-08-18 07:15:02 |   82 | https://geoffrey.info  |      28 | 2018-04-09 11:42:44 |
+|  28 | Dario77               | 2016-08-18 07:15:02 |   83 | http://paxton.com      |      28 | 2018-04-09 11:42:44 |
+|  28 | Dario77               | 2016-08-18 07:15:02 |   84 | https://trinity.biz    |      28 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   85 | http://fabiola.org     |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   86 | https://bryce.org      |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   87 | http://emery.net       |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   88 | https://marian.biz     |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   89 | https://kennedi.org    |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   90 | https://fanny.net      |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   91 | http://lottie.net      |      29 | 2018-04-09 11:42:44 |
+|  29 | Jaime53               | 2016-09-11 18:51:56 |   92 | http://lacy.biz        |      29 | 2018-04-09 11:42:44 |
+|  30 | Kaley9                | 2016-09-23 21:24:20 |   93 | https://jensen.name    |      30 | 2018-04-09 11:42:44 |
+|  30 | Kaley9                | 2016-09-23 21:24:20 |   94 | http://virginia.org    |      30 | 2018-04-09 11:42:44 |
+|  31 | Aiyana_Hoeger         | 2016-09-29 20:28:12 |   95 | https://ariel.net      |      31 | 2018-04-09 11:42:44 |
+|  32 | Irwin.Larson          | 2016-08-26 19:36:22 |   96 | http://roger.info      |      32 | 2018-04-09 11:42:44 |
+|  32 | Irwin.Larson          | 2016-08-26 19:36:22 |   97 | https://carolanne.com  |      32 | 2018-04-09 11:42:44 |
+|  32 | Irwin.Larson          | 2016-08-26 19:36:22 |   98 | https://margarita.info |      32 | 2018-04-09 11:42:44 |
+|  32 | Irwin.Larson          | 2016-08-26 19:36:22 |   99 | https://kayden.biz     |      32 | 2018-04-09 11:42:44 |
+|  33 | Yvette.Gottlieb91     | 2016-11-14 12:32:01 |  100 | https://brook.com      |      33 | 2018-04-09 11:42:44 |
+|  33 | Yvette.Gottlieb91     | 2016-11-14 12:32:01 |  101 | https://gust.net       |      33 | 2018-04-09 11:42:44 |
+|  33 | Yvette.Gottlieb91     | 2016-11-14 12:32:01 |  102 | http://bridie.name     |      33 | 2018-04-09 11:42:44 |
+|  33 | Yvette.Gottlieb91     | 2016-11-14 12:32:01 |  103 | http://barton.name     |      33 | 2018-04-09 11:42:44 |
+|  33 | Yvette.Gottlieb91     | 2016-11-14 12:32:01 |  104 | https://karina.biz     |      33 | 2018-04-09 11:42:44 |
+|  34 | Pearl7                | 2016-07-08 21:42:00 | NULL | NULL                   |    NULL | NULL                |
+|  35 | Lennie_Hartmann40     | 2017-03-30 03:25:21 |  105 | https://mariam.com     |      35 | 2018-04-09 11:42:44 |
+|  35 | Lennie_Hartmann40     | 2017-03-30 03:25:21 |  106 | https://trycia.com     |      35 | 2018-04-09 11:42:44 |
+|  36 | Ollie_Ledner37        | 2016-08-04 15:42:20 | NULL | NULL                   |    NULL | NULL                |
+|  37 | Yazmin_Mills95        | 2016-07-27 00:56:44 |  107 | https://everette.biz   |      37 | 2018-04-09 11:42:44 |
+|  38 | Jordyn.Jacobson2      | 2016-05-14 07:56:25 |  108 | http://boris.biz       |      38 | 2018-04-09 11:42:44 |
+|  38 | Jordyn.Jacobson2      | 2016-05-14 07:56:25 |  109 | http://arthur.name     |      38 | 2018-04-09 11:42:44 |
+|  39 | Kelsi26               | 2016-06-08 17:48:08 |  110 | https://cesar.com      |      39 | 2018-04-09 11:42:44 |
+|  40 | Rafael.Hickle2        | 2016-05-19 09:51:25 |  111 | http://charlie.com     |      40 | 2018-04-09 11:42:44 |
+|  41 | Mckenna17             | 2016-07-17 17:25:44 | NULL | NULL                   |    NULL | NULL                |
+|  42 | Maya.Farrell          | 2016-12-11 18:04:45 |  112 | https://lina.biz       |      42 | 2018-04-09 11:42:44 |
+|  42 | Maya.Farrell          | 2016-12-11 18:04:45 |  113 | https://darwin.net     |      42 | 2018-04-09 11:42:44 |
+|  42 | Maya.Farrell          | 2016-12-11 18:04:45 |  114 | https://aliyah.biz     |      42 | 2018-04-09 11:42:44 |
+|  43 | Janet.Armstrong       | 2016-10-06 07:57:44 |  115 | http://euna.info       |      43 | 2018-04-09 11:42:44 |
+|  43 | Janet.Armstrong       | 2016-10-06 07:57:44 |  116 | https://maymie.net     |      43 | 2018-04-09 11:42:44 |
+|  43 | Janet.Armstrong       | 2016-10-06 07:57:44 |  117 | http://joanie.name     |      43 | 2018-04-09 11:42:44 |
+|  43 | Janet.Armstrong       | 2016-10-06 07:57:44 |  118 | http://whitney.net     |      43 | 2018-04-09 11:42:44 |
+|  43 | Janet.Armstrong       | 2016-10-06 07:57:44 |  119 | http://garrison.name   |      43 | 2018-04-09 11:42:44 |
+|  44 | Seth46                | 2016-07-07 11:40:26 |  120 | https://olga.org       |      44 | 2018-04-09 11:42:44 |
+|  44 | Seth46                | 2016-07-07 11:40:26 |  121 | https://donavon.org    |      44 | 2018-04-09 11:42:44 |
+|  44 | Seth46                | 2016-07-07 11:40:26 |  122 | http://moses.biz       |      44 | 2018-04-09 11:42:44 |
+|  44 | Seth46                | 2016-07-07 11:40:26 |  123 | http://shannon.org     |      44 | 2018-04-09 11:42:44 |
+|  45 | David.Osinski47       | 2017-02-05 21:23:37 | NULL | NULL                   |    NULL | NULL                |
+|  46 | Malinda_Streich       | 2016-07-09 21:37:07 |  124 | http://kendrick.net    |      46 | 2018-04-09 11:42:44 |
+|  46 | Malinda_Streich       | 2016-07-09 21:37:07 |  125 | https://carey.com      |      46 | 2018-04-09 11:42:44 |
+|  46 | Malinda_Streich       | 2016-07-09 21:37:07 |  126 | http://lia.biz         |      46 | 2018-04-09 11:42:44 |
+|  46 | Malinda_Streich       | 2016-07-09 21:37:07 |  127 | https://celestine.name |      46 | 2018-04-09 11:42:44 |
+|  47 | Harrison.Beatty50     | 2016-09-02 03:48:38 |  128 | http://laila.info      |      47 | 2018-04-09 11:42:44 |
+|  47 | Harrison.Beatty50     | 2016-09-02 03:48:38 |  129 | http://buddy.com       |      47 | 2018-04-09 11:42:44 |
+|  47 | Harrison.Beatty50     | 2016-09-02 03:48:38 |  130 | http://americo.biz     |      47 | 2018-04-09 11:42:44 |
+|  47 | Harrison.Beatty50     | 2016-09-02 03:48:38 |  131 | http://lurline.info    |      47 | 2018-04-09 11:42:44 |
+|  47 | Harrison.Beatty50     | 2016-09-02 03:48:38 |  132 | http://kailee.org      |      47 | 2018-04-09 11:42:44 |
+|  48 | Granville_Kutch       | 2016-06-26 03:10:22 |  133 | https://edyth.com      |      48 | 2018-04-09 11:42:44 |
+|  49 | Morgan.Kassulke       | 2016-10-30 12:42:31 | NULL | NULL                   |    NULL | NULL                |
+|  50 | Gerard79              | 2016-08-23 19:47:44 |  134 | https://isaias.biz     |      50 | 2018-04-09 11:42:44 |
+|  50 | Gerard79              | 2016-08-23 19:47:44 |  135 | http://rosetta.net     |      50 | 2018-04-09 11:42:44 |
+|  50 | Gerard79              | 2016-08-23 19:47:44 |  136 | https://marianna.info  |      50 | 2018-04-09 11:42:44 |
+|  51 | Mariano_Koch3         | 2017-04-17 14:14:45 |  137 | https://roel.org       |      51 | 2018-04-09 11:42:44 |
+|  51 | Mariano_Koch3         | 2017-04-17 14:14:45 |  138 | http://julia.info      |      51 | 2018-04-09 11:42:44 |
+|  51 | Mariano_Koch3         | 2017-04-17 14:14:45 |  139 | https://seamus.org     |      51 | 2018-04-09 11:42:44 |
+|  51 | Mariano_Koch3         | 2017-04-17 14:14:45 |  140 | https://earline.info   |      51 | 2018-04-09 11:42:44 |
+|  51 | Mariano_Koch3         | 2017-04-17 14:14:45 |  141 | http://quinten.info    |      51 | 2018-04-09 11:42:44 |
+|  52 | Zack_Kemmer93         | 2017-01-01 05:58:22 |  142 | https://dolores.org    |      52 | 2018-04-09 11:42:44 |
+|  52 | Zack_Kemmer93         | 2017-01-01 05:58:22 |  143 | https://aimee.info     |      52 | 2018-04-09 11:42:44 |
+|  52 | Zack_Kemmer93         | 2017-01-01 05:58:22 |  144 | https://roderick.name  |      52 | 2018-04-09 11:42:44 |
+|  52 | Zack_Kemmer93         | 2017-01-01 05:58:22 |  145 | https://jarret.name    |      52 | 2018-04-09 11:42:44 |
+|  52 | Zack_Kemmer93         | 2017-01-01 05:58:22 |  146 | https://cathrine.com   |      52 | 2018-04-09 11:42:44 |
+|  53 | Linnea59              | 2017-02-07 07:49:33 | NULL | NULL                   |    NULL | NULL                |
+|  54 | Duane60               | 2016-12-21 04:43:37 | NULL | NULL                   |    NULL | NULL                |
+|  55 | Meggie_Doyle          | 2017-04-04 12:17:33 |  147 | https://adela.com      |      55 | 2018-04-09 11:42:44 |
+|  56 | Peter.Stehr0          | 2016-08-22 18:05:42 |  148 | https://demarco.com    |      56 | 2018-04-09 11:42:44 |
+|  57 | Julien_Schmidt        | 2017-02-02 23:12:48 | NULL | NULL                   |    NULL | NULL                |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  149 | https://lila.biz       |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  150 | http://ruben.net       |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  151 | https://alia.name      |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  152 | http://rickey.name     |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  153 | http://janie.com       |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  154 | http://myron.org       |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  155 | http://pearl.info      |      58 | 2018-04-09 11:42:44 |
+|  58 | Aurelie71             | 2016-05-31 06:20:56 |  156 | http://victoria.biz    |      58 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  157 | https://carmella.com   |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  158 | http://leo.com         |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  159 | http://jedediah.net    |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  160 | http://sedrick.net     |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  161 | https://clare.org      |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  162 | https://malcolm.name   |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  163 | https://lesly.com      |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  164 | https://roberta.net    |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  165 | https://estell.info    |      59 | 2018-04-09 11:42:44 |
+|  59 | Cesar93               | 2016-10-18 16:42:43 |  166 | http://kaleigh.biz     |      59 | 2018-04-09 11:42:44 |
+|  60 | Sam52                 | 2017-03-30 22:03:45 |  167 | http://blanca.org      |      60 | 2018-04-09 11:42:44 |
+|  60 | Sam52                 | 2017-03-30 22:03:45 |  168 | http://delpha.com      |      60 | 2018-04-09 11:42:44 |
+|  61 | Jayson65              | 2016-10-14 19:10:52 |  169 | http://annabelle.org   |      61 | 2018-04-09 11:42:44 |
+|  62 | Ressie_Stanton46      | 2016-12-20 15:09:08 |  170 | http://ephraim.com     |      62 | 2018-04-09 11:42:44 |
+|  62 | Ressie_Stanton46      | 2016-12-20 15:09:08 |  171 | https://dameon.name    |      62 | 2018-04-09 11:42:44 |
+|  63 | Elenor88              | 2016-05-08 01:30:40 |  172 | https://julianne.org   |      63 | 2018-04-09 11:42:44 |
+|  63 | Elenor88              | 2016-05-08 01:30:40 |  173 | https://jasmin.biz     |      63 | 2018-04-09 11:42:44 |
+|  63 | Elenor88              | 2016-05-08 01:30:40 |  174 | https://delbert.net    |      63 | 2018-04-09 11:42:44 |
+|  63 | Elenor88              | 2016-05-08 01:30:40 |  175 | https://norval.com     |      63 | 2018-04-09 11:42:44 |
+|  64 | Florence99            | 2016-10-06 23:08:30 |  176 | https://jessy.name     |      64 | 2018-04-09 11:42:44 |
+|  64 | Florence99            | 2016-10-06 23:08:30 |  177 | https://nolan.name     |      64 | 2018-04-09 11:42:44 |
+|  64 | Florence99            | 2016-10-06 23:08:30 |  178 | http://devon.info      |      64 | 2018-04-09 11:42:44 |
+|  64 | Florence99            | 2016-10-06 23:08:30 |  179 | http://ora.net         |      64 | 2018-04-09 11:42:44 |
+|  64 | Florence99            | 2016-10-06 23:08:30 |  180 | https://vivien.com     |      64 | 2018-04-09 11:42:44 |
+|  65 | Adelle96              | 2016-10-01 00:37:57 |  181 | https://hilda.info     |      65 | 2018-04-09 11:42:44 |
+|  65 | Adelle96              | 2016-10-01 00:37:57 |  182 | https://dorcas.biz     |      65 | 2018-04-09 11:42:44 |
+|  65 | Adelle96              | 2016-10-01 00:37:57 |  183 | http://hettie.net      |      65 | 2018-04-09 11:42:44 |
+|  65 | Adelle96              | 2016-10-01 00:37:57 |  184 | http://rico.biz        |      65 | 2018-04-09 11:42:44 |
+|  65 | Adelle96              | 2016-10-01 00:37:57 |  185 | http://jody.biz        |      65 | 2018-04-09 11:42:44 |
+|  66 | Mike.Auer39           | 2016-07-01 17:36:14 | NULL | NULL                   |    NULL | NULL                |
+|  67 | Emilio_Bernier52      | 2016-05-06 13:04:29 |  186 | http://sheila.com      |      67 | 2018-04-09 11:42:44 |
+|  67 | Emilio_Bernier52      | 2016-05-06 13:04:29 |  187 | http://germaine.name   |      67 | 2018-04-09 11:42:44 |
+|  67 | Emilio_Bernier52      | 2016-05-06 13:04:29 |  188 | https://mariane.org    |      67 | 2018-04-09 11:42:44 |
+|  68 | Franco_Keebler64      | 2016-11-13 20:09:26 | NULL | NULL                   |    NULL | NULL                |
+|  69 | Karley_Bosco          | 2016-06-24 23:38:52 |  189 | http://reva.com        |      69 | 2018-04-09 11:42:44 |
+|  70 | Erick5                | 2017-04-05 23:44:47 |  190 | https://llewellyn.info |      70 | 2018-04-09 11:42:44 |
+|  71 | Nia_Haag              | 2016-05-14 15:38:50 | NULL | NULL                   |    NULL | NULL                |
+|  72 | Kathryn80             | 2016-10-11 09:01:56 |  191 | http://ellen.info      |      72 | 2018-04-09 11:42:44 |
+|  72 | Kathryn80             | 2016-10-11 09:01:56 |  192 | https://anahi.info     |      72 | 2018-04-09 11:42:44 |
+|  72 | Kathryn80             | 2016-10-11 09:01:56 |  193 | https://javonte.org    |      72 | 2018-04-09 11:42:44 |
+|  72 | Kathryn80             | 2016-10-11 09:01:56 |  194 | http://florine.org     |      72 | 2018-04-09 11:42:44 |
+|  72 | Kathryn80             | 2016-10-11 09:01:56 |  195 | http://marcellus.info  |      72 | 2018-04-09 11:42:44 |
+|  73 | Jaylan.Lakin          | 2016-06-10 23:58:52 |  196 | http://stan.biz        |      73 | 2018-04-09 11:42:44 |
+|  74 | Hulda.Macejkovic      | 2017-01-25 17:17:27 | NULL | NULL                   |    NULL | NULL                |
+|  75 | Leslie67              | 2016-09-21 05:14:01 | NULL | NULL                   |    NULL | NULL                |
+|  76 | Janelle.Nikolaus81    | 2016-07-21 09:26:09 | NULL | NULL                   |    NULL | NULL                |
+|  77 | Donald.Fritsch        | 2017-01-07 10:05:41 |  197 | http://jarred.net      |      77 | 2018-04-09 11:42:44 |
+|  77 | Donald.Fritsch        | 2017-01-07 10:05:41 |  198 | http://jovanny.net     |      77 | 2018-04-09 11:42:44 |
+|  77 | Donald.Fritsch        | 2017-01-07 10:05:41 |  199 | http://linnie.com      |      77 | 2018-04-09 11:42:44 |
+|  77 | Donald.Fritsch        | 2017-01-07 10:05:41 |  200 | http://dino.name       |      77 | 2018-04-09 11:42:44 |
+|  77 | Donald.Fritsch        | 2017-01-07 10:05:41 |  201 | https://jane.net       |      77 | 2018-04-09 11:42:44 |
+|  77 | Donald.Fritsch        | 2017-01-07 10:05:41 |  202 | http://laney.name      |      77 | 2018-04-09 11:42:44 |
+|  78 | Colten.Harris76       | 2016-10-10 02:38:52 |  203 | http://trever.org      |      78 | 2018-04-09 11:42:44 |
+|  78 | Colten.Harris76       | 2016-10-10 02:38:52 |  204 | http://emilie.net      |      78 | 2018-04-09 11:42:44 |
+|  78 | Colten.Harris76       | 2016-10-10 02:38:52 |  205 | http://ted.info        |      78 | 2018-04-09 11:42:44 |
+|  78 | Colten.Harris76       | 2016-10-10 02:38:52 |  206 | http://keshawn.org     |      78 | 2018-04-09 11:42:44 |
+|  78 | Colten.Harris76       | 2016-10-10 02:38:52 |  207 | http://ole.info        |      78 | 2018-04-09 11:42:44 |
+|  79 | Katarina.Dibbert      | 2016-11-03 13:14:10 |  208 | https://ford.biz       |      79 | 2018-04-09 11:42:44 |
+|  80 | Darby_Herzog          | 2016-05-06 00:14:21 | NULL | NULL                   |    NULL | NULL                |
+|  81 | Esther.Zulauf61       | 2017-01-14 17:02:33 | NULL | NULL                   |    NULL | NULL                |
+|  82 | Aracely.Johnston98    | 2016-07-25 18:49:09 |  209 | https://humberto.org   |      82 | 2018-04-09 11:42:44 |
+|  82 | Aracely.Johnston98    | 2016-07-25 18:49:09 |  210 | http://penelope.info   |      82 | 2018-04-09 11:42:44 |
+|  83 | Bartholome.Bernhard   | 2016-11-06 02:31:23 | NULL | NULL                   |    NULL | NULL                |
+|  84 | Alysa22               | 2017-01-01 17:44:42 |  211 | https://dimitri.info   |      84 | 2018-04-09 11:42:44 |
+|  84 | Alysa22               | 2017-01-01 17:44:42 |  212 | http://cynthia.info    |      84 | 2018-04-09 11:42:44 |
+|  85 | Milford_Gleichner42   | 2017-04-30 07:50:51 |  213 | http://princess.org    |      85 | 2018-04-09 11:42:44 |
+|  85 | Milford_Gleichner42   | 2017-04-30 07:50:51 |  214 | https://ruthie.info    |      85 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  215 | https://evan.name      |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  216 | http://deontae.org     |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  217 | https://timmy.info     |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  218 | http://susie.info      |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  219 | http://hollis.com      |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  220 | https://colt.org       |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  221 | http://lucio.org       |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  222 | http://germaine.org    |      86 | 2018-04-09 11:42:44 |
+|  86 | Delfina_VonRueden68   | 2017-03-21 12:02:14 |  223 | http://howard.net      |      86 | 2018-04-09 11:42:44 |
+|  87 | Rick29                | 2017-02-24 11:25:08 |  224 | http://helena.name     |      87 | 2018-04-09 11:42:44 |
+|  87 | Rick29                | 2017-02-24 11:25:08 |  225 | https://celestino.name |      87 | 2018-04-09 11:42:44 |
+|  87 | Rick29                | 2017-02-24 11:25:08 |  226 | http://violet.info     |      87 | 2018-04-09 11:42:44 |
+|  87 | Rick29                | 2017-02-24 11:25:08 |  227 | http://nigel.biz       |      87 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  228 | https://noble.net      |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  229 | https://emilia.org     |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  230 | http://destini.net     |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  231 | https://mariano.net    |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  232 | https://brittany.org   |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  233 | https://madaline.name  |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  234 | https://devonte.name   |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  235 | https://blanche.net    |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  236 | http://cali.net        |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  237 | http://mekhi.name      |      88 | 2018-04-09 11:42:44 |
+|  88 | Clint27               | 2016-06-02 21:40:09 |  238 | http://adela.com       |      88 | 2018-04-09 11:42:44 |
+|  89 | Jessyca_West          | 2016-09-14 23:47:04 | NULL | NULL                   |    NULL | NULL                |
+|  90 | Esmeralda.Mraz57      | 2017-03-03 11:52:27 | NULL | NULL                   |    NULL | NULL                |
+|  91 | Bethany20             | 2016-06-03 23:31:53 | NULL | NULL                   |    NULL | NULL                |
+|  92 | Frederik_Rice         | 2016-07-06 21:56:28 |  239 | https://devan.com      |      92 | 2018-04-09 11:42:44 |
+|  92 | Frederik_Rice         | 2016-07-06 21:56:28 |  240 | https://jarrett.name   |      92 | 2018-04-09 11:42:44 |
+|  92 | Frederik_Rice         | 2016-07-06 21:56:28 |  241 | https://sid.biz        |      92 | 2018-04-09 11:42:44 |
+|  93 | Willie_Leuschke       | 2017-02-15 01:40:53 |  242 | https://jadyn.name     |      93 | 2018-04-09 11:42:44 |
+|  93 | Willie_Leuschke       | 2017-02-15 01:40:53 |  243 | https://erik.com       |      93 | 2018-04-09 11:42:44 |
+|  94 | Damon35               | 2016-10-31 14:44:27 |  244 | http://freeda.biz      |      94 | 2018-04-09 11:42:44 |
+|  95 | Nicole71              | 2016-05-09 17:30:22 |  245 | http://ayden.name      |      95 | 2018-04-09 11:42:44 |
+|  95 | Nicole71              | 2016-05-09 17:30:22 |  246 | https://kathleen.biz   |      95 | 2018-04-09 11:42:44 |
+|  96 | Keenan.Schamberger60  | 2016-08-28 14:57:28 |  247 | https://helmer.org     |      96 | 2018-04-09 11:42:44 |
+|  96 | Keenan.Schamberger60  | 2016-08-28 14:57:28 |  248 | https://maggie.info    |      96 | 2018-04-09 11:42:44 |
+|  96 | Keenan.Schamberger60  | 2016-08-28 14:57:28 |  249 | https://cecilia.net    |      96 | 2018-04-09 11:42:44 |
+|  97 | Tomas.Beatty93        | 2017-02-11 11:38:55 |  250 | http://ayla.org        |      97 | 2018-04-09 11:42:44 |
+|  97 | Tomas.Beatty93        | 2017-02-11 11:38:55 |  251 | https://elyssa.biz     |      97 | 2018-04-09 11:42:44 |
+|  98 | Imani_Nicolas17       | 2017-01-31 22:59:34 |  252 | http://jennie.com      |      98 | 2018-04-09 11:42:44 |
+|  99 | Alek_Watsica          | 2016-12-10 07:43:58 |  253 | http://ryleigh.info    |      99 | 2018-04-09 11:42:44 |
+|  99 | Alek_Watsica          | 2016-12-10 07:43:58 |  254 | https://darien.name    |      99 | 2018-04-09 11:42:44 |
+|  99 | Alek_Watsica          | 2016-12-10 07:43:58 |  255 | https://xzavier.org    |      99 | 2018-04-09 11:42:44 |
+| 100 | Javonte83             | 2017-03-27 22:06:37 |  256 | https://kaela.name     |     100 | 2018-04-09 11:42:44 |
+| 100 | Javonte83             | 2017-03-27 22:06:37 |  257 | http://dedrick.info    |     100 | 2018-04-09 11:42:44 |
++-----+-----------------------+---------------------+------+------------------------+---------+---------------------+
+283 rows in set (0.01 sec)
+
+mysql> SELECT * FROM users
+    -> LEFT JOIN photos
+    -> ON users.id = photos.user_id
+    -> WHERE image_url IS NULL;
++----+---------------------+---------------------+------+-----------+---------+------------+
+| id | username            | created_at          | id   | image_url | user_id | created_at |
++----+---------------------+---------------------+------+-----------+---------+------------+
+|  5 | Aniya_Hackett       | 2016-12-07 01:04:39 | NULL | NULL      |    NULL | NULL       |
+|  7 | Kasandra_Homenick   | 2016-12-12 06:50:07 | NULL | NULL      |    NULL | NULL       |
+| 14 | Jaclyn81            | 2017-02-06 23:29:16 | NULL | NULL      |    NULL | NULL       |
+| 21 | Rocio33             | 2017-01-23 11:51:15 | NULL | NULL      |    NULL | NULL       |
+| 24 | Maxwell.Halvorson   | 2017-04-18 02:32:43 | NULL | NULL      |    NULL | NULL       |
+| 25 | Tierra.Trantow      | 2016-10-03 12:49:20 | NULL | NULL      |    NULL | NULL       |
+| 34 | Pearl7              | 2016-07-08 21:42:00 | NULL | NULL      |    NULL | NULL       |
+| 36 | Ollie_Ledner37      | 2016-08-04 15:42:20 | NULL | NULL      |    NULL | NULL       |
+| 41 | Mckenna17           | 2016-07-17 17:25:44 | NULL | NULL      |    NULL | NULL       |
+| 45 | David.Osinski47     | 2017-02-05 21:23:37 | NULL | NULL      |    NULL | NULL       |
+| 49 | Morgan.Kassulke     | 2016-10-30 12:42:31 | NULL | NULL      |    NULL | NULL       |
+| 53 | Linnea59            | 2017-02-07 07:49:33 | NULL | NULL      |    NULL | NULL       |
+| 54 | Duane60             | 2016-12-21 04:43:37 | NULL | NULL      |    NULL | NULL       |
+| 57 | Julien_Schmidt      | 2017-02-02 23:12:48 | NULL | NULL      |    NULL | NULL       |
+| 66 | Mike.Auer39         | 2016-07-01 17:36:14 | NULL | NULL      |    NULL | NULL       |
+| 68 | Franco_Keebler64    | 2016-11-13 20:09:26 | NULL | NULL      |    NULL | NULL       |
+| 71 | Nia_Haag            | 2016-05-14 15:38:50 | NULL | NULL      |    NULL | NULL       |
+| 74 | Hulda.Macejkovic    | 2017-01-25 17:17:27 | NULL | NULL      |    NULL | NULL       |
+| 75 | Leslie67            | 2016-09-21 05:14:01 | NULL | NULL      |    NULL | NULL       |
+| 76 | Janelle.Nikolaus81  | 2016-07-21 09:26:09 | NULL | NULL      |    NULL | NULL       |
+| 80 | Darby_Herzog        | 2016-05-06 00:14:21 | NULL | NULL      |    NULL | NULL       |
+| 81 | Esther.Zulauf61     | 2017-01-14 17:02:33 | NULL | NULL      |    NULL | NULL       |
+| 83 | Bartholome.Bernhard | 2016-11-06 02:31:23 | NULL | NULL      |    NULL | NULL       |
+| 89 | Jessyca_West        | 2016-09-14 23:47:04 | NULL | NULL      |    NULL | NULL       |
+| 90 | Esmeralda.Mraz57    | 2017-03-03 11:52:27 | NULL | NULL      |    NULL | NULL       |
+| 91 | Bethany20           | 2016-06-03 23:31:53 | NULL | NULL      |    NULL | NULL       |
++----+---------------------+---------------------+------+-----------+---------+------------+
+26 rows in set (0.00 sec)
+
+mysql> SELECT username FROM users
+    -> LEFT JOIN photos
+    -> ON users.id = photos.user_id
+    -> WHERE image_url IS NULL;
++---------------------+
+| username            |
++---------------------+
+| Aniya_Hackett       |
+| Bartholome.Bernhard |
+| Bethany20           |
+| Darby_Herzog        |
+| David.Osinski47     |
+| Duane60             |
+| Esmeralda.Mraz57    |
+| Esther.Zulauf61     |
+| Franco_Keebler64    |
+| Hulda.Macejkovic    |
+| Jaclyn81            |
+| Janelle.Nikolaus81  |
+| Jessyca_West        |
+| Julien_Schmidt      |
+| Kasandra_Homenick   |
+| Leslie67            |
+| Linnea59            |
+| Maxwell.Halvorson   |
+| Mckenna17           |
+| Mike.Auer39         |
+| Morgan.Kassulke     |
+| Nia_Haag            |
+| Ollie_Ledner37      |
+| Pearl7              |
+| Rocio33             |
+| Tierra.Trantow      |
++---------------------+
+26 rows in set (0.00 sec)
+
+--Answer: 26 users without a photo
+
+--Challenge 4 Which photo has the most likes ?
+
+mysql> show tables;
++--------------------+
+| Tables_in_ig_clone |
++--------------------+
+| comments           |
+| follows            |
+| likes              |
+| photo_tags         |
+| photos             |
+| tags               |
+| users              |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> DESC photos;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| image_url  | varchar(255) | NO   |     | NULL              |                |
+| user_id    | int(11)      | NO   | MUL | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> DESC likes;
++------------+-----------+------+-----+-------------------+-------+
+| Field      | Type      | Null | Key | Default           | Extra |
++------------+-----------+------+-----+-------------------+-------+
+| user_id    | int(11)   | NO   | PRI | NULL              |       |
+| photo_id   | int(11)   | NO   | PRI | NULL              |       |
+| created_at | timestamp | NO   |     | CURRENT_TIMESTAMP |       |
++------------+-----------+------+-----+-------------------+-------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT id, COUNT(*) FROM photos
+    -> INNER JOIN likes
+    -> ON photos.id = likes.photo_id
+    -> GROUP BY photos.id;
++-----+----------+
+| id  | COUNT(*) |
++-----+----------+
+|   1 |       25 |
+|   2 |       36 |
+|   3 |       38 |
+|   4 |       38 |
+|   5 |       31 |
+|   6 |       31 |
+|   7 |       38 |
+|   8 |       27 |
+|   9 |       31 |
+|  10 |       30 |
+|  11 |       33 |
+|  12 |       29 |
+|  13 |       40 |
+|  14 |       35 |
+|  15 |       34 |
+|  16 |       37 |
+|  17 |       36 |
+|  18 |       31 |
+|  19 |       35 |
+|  20 |       35 |
+|  21 |       36 |
+|  22 |       28 |
+|  23 |       38 |
+|  24 |       35 |
+|  25 |       36 |
+|  26 |       30 |
+|  27 |       31 |
+|  28 |       36 |
+|  29 |       33 |
+|  30 |       41 |
+|  31 |       31 |
+|  32 |       33 |
+|  33 |       29 |
+|  34 |       32 |
+|  35 |       32 |
+|  36 |       35 |
+|  37 |       38 |
+|  38 |       31 |
+|  39 |       34 |
+|  40 |       37 |
+|  41 |       38 |
+|  42 |       37 |
+|  43 |       37 |
+|  44 |       39 |
+|  45 |       34 |
+|  46 |       34 |
+|  47 |       30 |
+|  48 |       35 |
+|  49 |       37 |
+|  50 |       27 |
+|  51 |       29 |
+|  52 |       41 |
+|  53 |       36 |
+|  54 |       31 |
+|  55 |       35 |
+|  56 |       36 |
+|  57 |       37 |
+|  58 |       36 |
+|  59 |       37 |
+|  60 |       32 |
+|  61 |       41 |
+|  62 |       39 |
+|  63 |       38 |
+|  64 |       34 |
+|  65 |       33 |
+|  66 |       39 |
+|  67 |       35 |
+|  68 |       34 |
+|  69 |       38 |
+|  70 |       34 |
+|  71 |       37 |
+|  72 |       33 |
+|  73 |       31 |
+|  74 |       34 |
+|  75 |       33 |
+|  76 |       32 |
+|  77 |       35 |
+|  78 |       34 |
+|  79 |       34 |
+|  80 |       35 |
+|  81 |       38 |
+|  82 |       35 |
+|  83 |       31 |
+|  84 |       35 |
+|  85 |       36 |
+|  86 |       34 |
+|  87 |       37 |
+|  88 |       33 |
+|  89 |       32 |
+|  90 |       36 |
+|  91 |       34 |
+|  92 |       29 |
+|  93 |       31 |
+|  94 |       34 |
+|  95 |       28 |
+|  96 |       32 |
+|  97 |       40 |
+|  98 |       34 |
+|  99 |       34 |
+| 100 |       39 |
+| 101 |       36 |
+| 102 |       34 |
+| 103 |       35 |
+| 104 |       31 |
+| 105 |       33 |
+| 106 |       36 |
+| 107 |       39 |
+| 108 |       29 |
+| 109 |       33 |
+| 110 |       39 |
+| 111 |       33 |
+| 112 |       35 |
+| 113 |       36 |
+| 114 |       32 |
+| 115 |       31 |
+| 116 |       36 |
+| 117 |       35 |
+| 118 |       39 |
+| 119 |       39 |
+| 120 |       37 |
+| 121 |       34 |
+| 122 |       33 |
+| 123 |       42 |
+| 124 |       34 |
+| 125 |       33 |
+| 126 |       35 |
+| 127 |       43 |
+| 128 |       34 |
+| 129 |       29 |
+| 130 |       29 |
+| 131 |       29 |
+| 132 |       30 |
+| 133 |       37 |
+| 134 |       34 |
+| 135 |       29 |
+| 136 |       35 |
+| 137 |       35 |
+| 138 |       34 |
+| 139 |       27 |
+| 140 |       33 |
+| 141 |       34 |
+| 142 |       32 |
+| 143 |       30 |
+| 144 |       39 |
+| 145 |       48 |
+| 146 |       33 |
+| 147 |       41 |
+| 148 |       33 |
+| 149 |       34 |
+| 150 |       38 |
+| 151 |       32 |
+| 152 |       33 |
+| 153 |       40 |
+| 154 |       34 |
+| 155 |       38 |
+| 156 |       31 |
+| 157 |       33 |
+| 158 |       35 |
+| 159 |       31 |
+| 160 |       31 |
+| 161 |       40 |
+| 162 |       38 |
+| 163 |       33 |
+| 164 |       32 |
+| 165 |       29 |
+| 166 |       36 |
+| 167 |       31 |
+| 168 |       32 |
+| 169 |       38 |
+| 170 |       34 |
+| 171 |       36 |
+| 172 |       32 |
+| 173 |       34 |
+| 174 |       41 |
+| 175 |       28 |
+| 176 |       33 |
+| 177 |       36 |
+| 178 |       37 |
+| 179 |       30 |
+| 180 |       39 |
+| 181 |       35 |
+| 182 |       43 |
+| 183 |       38 |
+| 184 |       30 |
+| 185 |       33 |
+| 186 |       36 |
+| 187 |       31 |
+| 188 |       30 |
+| 189 |       36 |
+| 190 |       36 |
+| 191 |       31 |
+| 192 |       41 |
+| 193 |       30 |
+| 194 |       29 |
+| 195 |       26 |
+| 196 |       38 |
+| 197 |       38 |
+| 198 |       37 |
+| 199 |       39 |
+| 200 |       34 |
+| 201 |       39 |
+| 202 |       31 |
+| 203 |       37 |
+| 204 |       35 |
+| 205 |       39 |
+| 206 |       35 |
+| 207 |       31 |
+| 208 |       29 |
+| 209 |       34 |
+| 210 |       38 |
+| 211 |       36 |
+| 212 |       37 |
+| 213 |       35 |
+| 214 |       29 |
+| 215 |       29 |
+| 216 |       30 |
+| 217 |       34 |
+| 218 |       32 |
+| 219 |       32 |
+| 220 |       33 |
+| 221 |       34 |
+| 222 |       36 |
+| 223 |       25 |
+| 224 |       31 |
+| 225 |       37 |
+| 226 |       33 |
+| 227 |       39 |
+| 228 |       31 |
+| 229 |       32 |
+| 230 |       37 |
+| 231 |       34 |
+| 232 |       35 |
+| 233 |       34 |
+| 234 |       35 |
+| 235 |       34 |
+| 236 |       30 |
+| 237 |       32 |
+| 238 |       27 |
+| 239 |       31 |
+| 240 |       30 |
+| 241 |       37 |
+| 242 |       33 |
+| 243 |       35 |
+| 244 |       40 |
+| 245 |       33 |
+| 246 |       31 |
+| 247 |       28 |
+| 248 |       37 |
+| 249 |       34 |
+| 250 |       31 |
+| 251 |       28 |
+| 252 |       34 |
+| 253 |       32 |
+| 254 |       31 |
+| 255 |       33 |
+| 256 |       41 |
+| 257 |       36 |
++-----+----------+
+257 rows in set (0.00 sec)
+
+mysql> SELECT id, image_url, COUNT(*) AS likes 
+    -> FROM photos
+    -> INNER JOIN likes
+    -> ON photos.id = likes.photo_id
+    -> GROUP BY photos.id
+    -> ORDER BY likes DESC
+    -> LIMIT 5;
++-----+------------------------+-------+
+| id  | image_url              | likes |
++-----+------------------------+-------+
+| 145 | https://jarret.name    |    48 |
+| 127 | https://celestine.name |    43 |
+| 182 | https://dorcas.biz     |    43 |
+| 123 | http://shannon.org     |    42 |
+|  61 | https://dejon.name     |    41 |
++-----+------------------------+-------+
+5 rows in set (0.00 sec)
+
+--Answer: Photo "https://jarret.name" has the most likes.
+
+
+
+
