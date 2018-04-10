@@ -1013,6 +1013,52 @@ mysql> SELECT photos.id, image_url, COUNT(*) AS likes
 
 --Answer: Photo "https://jarret.name" has the most likes.
 
+--Challenge 4.2 Who made that photo.
+
+mysql> DESC users;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| username   | varchar(255) | NO   | UNI | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> DESC photos;
++------------+--------------+------+-----+-------------------+----------------+
+| Field      | Type         | Null | Key | Default           | Extra          |
++------------+--------------+------+-----+-------------------+----------------+
+| id         | int(11)      | NO   | PRI | NULL              | auto_increment |
+| image_url  | varchar(255) | NO   |     | NULL              |                |
+| user_id    | int(11)      | NO   | MUL | NULL              |                |
+| created_at | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
++------------+--------------+------+-----+-------------------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT 
+    -> photos.id,
+    -> username,
+    -> image_url,
+    -> COUNT(*) AS likes 
+    -> FROM photos
+    -> INNER JOIN likes
+    -> ON photos.id = likes.photo_id
+    -> INNER JOIN users
+    -> ON users.id = photos.user_id
+    -> GROUP BY photos.id
+    -> ORDER BY likes DESC
+    -> LIMIT 5;
++-----+-----------------+------------------------+-------+
+| id  | username        | image_url              | likes |
++-----+-----------------+------------------------+-------+
+| 145 | Zack_Kemmer93   | https://jarret.name    |    48 |
+| 182 | Adelle96        | https://dorcas.biz     |    43 |
+| 127 | Malinda_Streich | https://celestine.name |    43 |
+| 123 | Seth46          | http://shannon.org     |    42 |
+| 256 | Javonte83       | https://kaela.name     |    41 |
++-----+-----------------+------------------------+-------+
+5 rows in set (0.00 sec)
 
 
 
