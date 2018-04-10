@@ -726,7 +726,7 @@ mysql> DESC likes;
 +------------+-----------+------+-----+-------------------+-------+
 3 rows in set (0.00 sec)
 
-mysql> SELECT id, COUNT(*) FROM photos
+mysql> SELECT photos.id, COUNT(*) FROM photos
     -> INNER JOIN likes
     -> ON photos.id = likes.photo_id
     -> GROUP BY photos.id;
@@ -993,7 +993,7 @@ mysql> SELECT id, COUNT(*) FROM photos
 +-----+----------+
 257 rows in set (0.00 sec)
 
-mysql> SELECT id, image_url, COUNT(*) AS likes 
+mysql> SELECT photos.id, image_url, COUNT(*) AS likes 
     -> FROM photos
     -> INNER JOIN likes
     -> ON photos.id = likes.photo_id
